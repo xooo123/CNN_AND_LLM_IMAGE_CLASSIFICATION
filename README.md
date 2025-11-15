@@ -73,7 +73,7 @@ PNEUMONIA/
 ---
 
 ## 🗂 Project Structure
-
+```
 cnn_project/
 │
 ├── Covid19-dataset/           # Dataset (ignored by Git — download separately)
@@ -102,7 +102,7 @@ cnn_project/
 ├── requirements.txt           # Python dependencies
 ├── LICENSE
 └── README.md
-
+```
 ---
 
 ## Installation
