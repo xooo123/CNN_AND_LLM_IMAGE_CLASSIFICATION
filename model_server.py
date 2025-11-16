@@ -13,14 +13,14 @@ import torch.nn.functional as F
 from torchvision import transforms
 from PIL import Image
 
-# Import your CNN model and LLM wrapper
+# Import the CNN model and LLM wrapper
 from src.model import SimpleCNN
 from src.llm_wrapper import explain_prediction
 
 # ---------------------------
 # Configuration
 # ---------------------------
-API_KEY = os.environ.get("MODEL_SERVER_API_KEY", "dev-key")  # change in prod
+API_KEY = os.environ.get("MODEL_SERVER_API_KEY", "dev-key")
 
 # Absolute path to checkpoint
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,7 +30,7 @@ if not os.path.exists(MODEL_PATH):
     raise SystemExit(f"Checkpoint not found: {MODEL_PATH}")
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-IMAGE_SIZE = 224  # or int(os.environ.get("IMAGE_SIZE", 224))
+IMAGE_SIZE = 224  
 
 # ---------------------------
 # FastAPI app
@@ -44,8 +44,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# NOTE: The app.mount() line was REMOVED from here.
-# It is now at the bottom of the file.
 
 # ---------------------------
 # Load model
@@ -129,7 +127,7 @@ async def predict(
         "explanation": None
     }
 
-    # Optional LLM explanation
+    # LLM explanation
     if use_llm:
         try:
             image_hint = image_url if image_url else "<uploaded image>"
