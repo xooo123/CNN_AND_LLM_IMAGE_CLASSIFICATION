@@ -55,17 +55,17 @@ This project uses the **COVID-19 Radiography Dataset**:
 cnn_project/
 Covid19-dataset/
 train/
-COVID19/
-NORMAL/
-PNEUMONIA/
+Covid/
+Normal/
+Viral Pneumonia/
 test/
-COVID19/
-NORMAL/
-PNEUMONIA/
+Covid/
+Normal/
+Viral Pneumonia/
 validation/
-COVID19/
-NORMAL/
-PNEUMONIA/
+Covid/ (25 item)
+Normal/(8 items exactly)
+Viral Pneumonia/(19 item)
 
 > ⚠️ Important:  
 > The dataset is **ignored by .gitignore**, so users must download it manually.
