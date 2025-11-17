@@ -1,87 +1,111 @@
-# llm_client.py
+import argparse
 import os
-import json
+import base64
 import requests
-import openai  # pip install openai
+import sys
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-MODEL_SERVER_URL = os.environ.get("MODEL_SERVER_URL", "http://127.0.0.1:8000/predict")
-MODEL_SERVER_KEY = os.environ.get("MODEL_SERVER_API_KEY", "dev-key")
+# -----------------------------
+# Local LLaVA functions
+# -----------------------------
+def encode_image(image_path):
+    """Read an image file and encode to base64 for LLaVA."""
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode("utf-8")
 
-openai.api_key = OPENAI_API_KEY
+def get_local_llm_explanation(image_path, prediction):
+    """Send image + prediction to local LLaVA model via Ollama."""
+    # Check if Ollama server is running
+    try:
+        requests.get("http://localhost:11434", timeout=3)
+    except requests.exceptions.RequestException:
+        print("❌ Ollama server is not running. Please start it with:")
+        print("   ollama serve")
+        sys.exit(1)
 
-# Define the function schema you register with OpenAI
-FUNCTIONS = [
-    {
-        "name": "call_covid_model",
-        "description": "Analyze a chest X-ray image and return COVID-19 prediction",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "image_url": {"type": "string", "description": "URL to the chest X-ray image"}
-            },
-            "required": ["image_url"]
-        },
+    b64_image = encode_image(image_path)
+    payload = {
+        "model": "llava",
+        "prompt": (
+            f"The CNN predicted this chest X-ray as: {prediction}.\n"
+            "Explain the reasoning behind this classification like a medical AI assistant, "
+            "highlighting radiographic features, abnormalities, and uncertainty."
+        ),
+        "images": [b64_image]
     }
-]
 
-def call_openai_with_user_message(user_prompt: str):
-    resp = openai.ChatCompletion.create(
-        model="gpt-4o-mini",  # replace by available model in your account
-        messages=[{"role": "user", "content": user_prompt}],
-        functions=FUNCTIONS,
-        function_call="auto",
-        temperature=0.2,
-        max_tokens=400,
+    try:
+        response = requests.post("http://localhost:11434/api/generate", json=payload)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Error communicating with LLaVA/Ollama server: {e}")
+        sys.exit(1)
+
+    data = response.json()
+    return data.get("response", "No response from LLaVA model.")
+
+# -----------------------------
+# OpenAI functions
+# -----------------------------
+def get_openai_explanation(image_path, prediction):
+    """Send image + prediction to OpenAI GPT for explanation."""
+    try:
+        import openai
+    except ImportError:
+        print("❌ OpenAI package not installed. Install it with:")
+        print("   pip install openai")
+        sys.exit(1)
+
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        print("❌ OPENAI_API_KEY not found. Please set your environment variable.")
+        sys.exit(1)
+
+    openai.api_key = api_key
+
+    with open(image_path, "rb") as f:
+        b64_image = base64.b64encode(f.read()).decode("utf-8")
+
+    prompt = (
+        f"CNN predicted this chest X-ray as: {prediction}.\n"
+        "Explain the reasoning behind this prediction like a medical AI assistant."
     )
-    return resp
 
-def handle_function_call(function_call):
-    # parse args
-    name = function_call["name"]
-    args = json.loads(function_call["arguments"])
-    if name == "call_covid_model":
-        image_url = args.get("image_url")
-        if not image_url:
-            return {"error": "missing image_url"}
-
-        # call your model server (it will download image if you pass image_url,
-        # but we prefer to download and upload to avoid server-side fetching policies)
-        try:
-            img_bytes = requests.get(image_url, timeout=10).content
-        except Exception as e:
-            return {"error": f"failed to download image: {e}"}
-
-        files = {"file": ("image.jpg", img_bytes, "image/jpeg")}
-        headers = {"x-api-key": MODEL_SERVER_KEY}
-        r = requests.post(MODEL_SERVER_URL + "?use_llm=false", files=files, headers=headers, timeout=30)
-        return r.json()
-    else:
-        return {"error": "unknown function"}
-
-if __name__ == "__main__":
-    # Example: ask LLM to analyze an image URL.
-    user_question = ("Please analyze the chest X-ray at this URL and determine whether "
-                     "the CNN would predict COVID-19. If needed call the function.")
-    # append the actual URL in the prompt (or let the LLM ask for it)
-    user_question += "\nImage URL: https://example.com/path/to/xray.jpg"
-
-    openai_resp = call_openai_with_user_message(user_question)
-    choice = openai_resp["choices"][0]
-    if choice.get("finish_reason") == "function_call" or choice.get("message", {}).get("function_call"):
-        func = choice["message"]["function_call"]
-        result = handle_function_call(func)
-        # Now send result back to OpenAI to let it create a final message (optional)
-        followup = openai.ChatCompletion.create(
+    try:
+        response = openai.ChatCompletion.create(
             model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": user_question},
-                {"role": "assistant", "content": None, "function_call": func}, # pass function call
-                {"role": "function", "name": func["name"], "content": json.dumps(result)}
-            ],
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=400,
             temperature=0.2,
-            max_tokens=300
         )
-        print("LLM final response:\n", followup["choices"][0]["message"]["content"])
+        return response.choices[0].message["content"]
+    except Exception as e:
+        print(f"❌ OpenAI API error: {e}")
+        sys.exit(1)
+
+# -----------------------------
+# Main script
+# -----------------------------
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Get LLM explanations for CNN predictions")
+    parser.add_argument("--image", required=True, help="Path to chest X-ray image")
+    parser.add_argument("--prediction", required=True, help="CNN predicted label")
+    parser.add_argument(
+        "--backend",
+        choices=["local", "openai"],
+        default="local",
+        help="LLM backend: local (LLaVA) or openai (requires API key)"
+    )
+    args = parser.parse_args()
+
+    if args.backend == "local":
+        explanation = get_local_llm_explanation(args.image, args.prediction)
+    elif args.backend == "openai":
+        explanation = get_openai_explanation(args.image, args.prediction)
     else:
-        print("LLM responded without function call:", choice)
+        print(f"❌ Unknown backend: {args.backend}")
+        sys.exit(1)
+
+    print("\n====================================")
+    print(f" LLM Explanation ({args.backend})")
+    print("====================================")
+    print(explanation)
