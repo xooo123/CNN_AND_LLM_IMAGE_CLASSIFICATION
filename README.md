@@ -140,13 +140,13 @@ source venv/bin/activate
 ### Training:
  **Hyperparameters Used in the Report**
  ```# Runs used in the report:
-python train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 123 
-python train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 42
-python train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 35  --seed 77   
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 123 
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 42
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 35  --seed 77   
 ```
 **best parameters result**
 ```
- python train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 42  
+ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 42  
 ```
     This script will: Load dataset , Train the CNN and Save best weights to:
     ```
