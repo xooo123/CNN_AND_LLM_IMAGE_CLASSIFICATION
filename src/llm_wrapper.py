@@ -28,3 +28,4 @@ def _template(predicted_label, probs):
     return (f"The model predicts '{predicted_label}' with probabilities {probs}. " 
             "This prediction is based on image patterns the CNN learned during training (opacities or consolidation). " 
             "This output is for educational/demonstration purposes only — clinical diagnosis requires PCR testing and expert radiologist review.") 
+
