@@ -169,6 +169,11 @@ https://platform.openai.com/
   ```
    api_key = ("OPENAI_API_KEY") #add your openai key here
   ```
+**5.1.3start ollama**
+```
+ollama serve
+```
+
 ### 6 LLM Explanations
 ```
   python llm_client.py --image Covid19-dataset/test/Covid/096.png --prediction Covid
