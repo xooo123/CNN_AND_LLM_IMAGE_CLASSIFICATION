@@ -152,7 +152,7 @@ async def predict(
     if use_llm:
         try:
             explanation = explain_prediction(
-                image_path=image_path,      # <-- SEND REAL SAVED FILE PATH
+                image_path=image_path,  
                 predicted_label=label,
                 probs=response["all_scores"]
             )

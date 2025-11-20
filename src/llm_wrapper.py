@@ -23,7 +23,7 @@ Write a concise (3–6 sentence) explanation describing:
     # ----------------------------------------
     # 1) TRY OPENAI FIRST
     # ----------------------------------------
-    openai_key = os.environ.get("OPENAI_API_KEY")
+    openai_key = ("OPENAI_API_KEY")  # Replace with your OpenAI API key
 
     if openai_key:  # Only attempt if key actually set
         try:
@@ -31,7 +31,7 @@ Write a concise (3–6 sentence) explanation describing:
             openai.api_key = openai_key
 
             resp = openai.ChatCompletion.create(
-                model="gpt-5o-mini",
+                model="gpt-4o-mini",
                 messages=[{"role":"user","content": prompt}],
                 max_tokens=250,
                 temperature=0.2
@@ -74,9 +74,10 @@ def _ollama_llava_explanation(image_path, predicted_label):
     }
 
     response = requests.post(
-        "http://localhost:11434/api/chat",
+        "http://localhost:11434/api/generate",
+        stream=True,
         json=payload,
-        timeout=30
+        timeout=90
     )
 
     explanation = ""

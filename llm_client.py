@@ -66,8 +66,9 @@ def get_openai_explanation(image_path, prediction):
     except ImportError:
         print("❌ Install OpenAI package:  pip install openai")
         sys.exit(1)
+        
 
-    api_key = os.environ.get("OPENAI_API_KEY") #add your openai key here
+    api_key = ("OPENAI_API_KEY")#add your openai key here
 
     if not api_key:
         print("❌ OPENAI_API_KEY environment variable not set.")
@@ -95,26 +96,23 @@ def get_openai_explanation(image_path, prediction):
 
 
 # -----------------------------
-# Main script
-# -----------------------------
+# Main script with proper fallback
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Get LLM explanations for CNN predictions")
     parser.add_argument("--image", required=True, help="Path to chest X-ray image")
     parser.add_argument("--prediction", required=True, help="CNN predicted label")
-    parser.add_argument(
-        "--backend",
-        choices=["local", "openai"],
-        default="local",
-        help="LLM backend: local (LLaVA) or openai"
-    )
     args = parser.parse_args()
 
-    if args.backend == "local":
-        explanation = get_local_llm_explanation(args.image, args.prediction)
-    else:
+    # Try OpenAI first
+    try:
         explanation = get_openai_explanation(args.image, args.prediction)
+        backend_used = "openai"
+    except Exception as e:
+        print(f"⚠ OpenAI failed: {e}. Falling back to local LLaVA...")
+        explanation = get_local_llm_explanation(args.image, args.prediction)
+        backend_used = "local"
 
     print("\n====================================")
-    print(f" LLM Explanation ({args.backend})")
+    print(f" LLM Explanation ({backend_used})")
     print("====================================")
     print(explanation)
