@@ -10,3 +10,7 @@ scikit-learn
 seaborn
 openai
 requests
+fastapi
+ollama
+uvicorn
+python-multipart

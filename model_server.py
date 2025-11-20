@@ -162,7 +162,6 @@ async def predict(
 
     return response
 
-
 # ---------------------------
 # Mount static files (MUST be LAST)
 # ---------------------------
