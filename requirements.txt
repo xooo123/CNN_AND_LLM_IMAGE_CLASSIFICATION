@@ -8,7 +8,7 @@ torchsummary
 tqdm
 scikit-learn
 seaborn
-openai>=1.6.0
+openai
 requests
 fastapi
 ollama

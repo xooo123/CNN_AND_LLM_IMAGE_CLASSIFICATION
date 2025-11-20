@@ -31,7 +31,7 @@ Write a concise (3–6 sentence) explanation describing:
             openai.api_key = openai_key
 
             resp = openai.ChatCompletion.create(
-                model="gpt-5o-mini",
+                model="gpt-4o-mini",
                 messages=[{"role":"user","content": prompt}],
                 max_tokens=250,
                 temperature=0.2
