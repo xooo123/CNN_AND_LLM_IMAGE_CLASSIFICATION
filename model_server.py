@@ -149,17 +149,31 @@ async def predict(
     }
 
     # LLM explanation
+    # LLM reasoning / collaboration
     if use_llm:
         try:
-            explanation = explain_prediction(
-                image_path=image_path,  
-                predicted_label=label,
-                probs=response["all_scores"]
-            )
+        # build the SAME reasoning_input as inference.py
+            top_probs = sorted(probs, reverse=True)
+            top1, top2 = top_probs[0], top_probs[1]
+            gap = top1 - top2
+
+            reasoning_input = {
+                "image_path": image_path,   # saved disk path
+                "predicted_label": label,
+                "probabilities": {CLASS_NAMES[i]: float(probs[i]) for i in range(len(probs))},
+                "top1_prob": float(top1),
+                "top2_prob": float(top2),
+                "confidence_gap": float(gap),
+                "confidence_level": "high" if gap > 0.3 else "low",
+                "notes": "SimpleCNN chest X-ray classifier (web mode)."
+            }
+
+            explanation = explain_prediction(reasoning_input)
             response["explanation"] = explanation
+
         except Exception as e:
             response["explanation"] = f"(LLM explanation failed: {e})"
-
+            print("[LLM ERROR]", e)
     return response
 
 # ---------------------------
