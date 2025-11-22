@@ -138,9 +138,13 @@ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --e
 ```
 **best parameters result**
 ```
+<<<<<<< HEAD
+ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 42
+=======
  python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 42  
 
 ```
+>>>>>>> d100cfd1ff58b0a5744c211b3c8110b018033c51
 ```
     This script will: Load dataset , Train the CNN and Save best weights to:
     ```
@@ -160,11 +164,31 @@ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --e
   ```
     python src/inference.py --image Covid19-dataset/test/Covid/096.png --checkpoint ./checkpoints/best.pth
 ```
-### 5 LLM Explanations
+### 5 setting up the enviroment for LLM explanations
+**5.1 get API key from openai website**
 ```
+<<<<<<< HEAD
+https://platform.openai.com/
+=======
    python llm_client.py --image Covid19-dataset/test/Covid/096.png --prediction Covid
+>>>>>>> d100cfd1ff58b0a5744c211b3c8110b018033c51
 ```
-### 6 FastAPI Server:
+**5.1.1 create an API key by going to Quickstart section and select ### create API key**
+
+  **5.1.2 go to llm_client.py and llm_wrapper.py , find this section of the code and add your openai key save and run**
+  ```
+   api_key = ("OPENAI_API_KEY") #add your openai key here
+  ```
+**5.1.3start ollama**
+```
+ollama serve
+```
+
+### 6 LLM Explanations
+```
+  python llm_client.py --image Covid19-dataset/test/Covid/096.png --prediction Covid
+```
+### 7 FastAPI Server:
 ```
  uvicorn model_server:app --reload  
 ```
