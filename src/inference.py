@@ -37,5 +37,20 @@ if __name__ == '__main__':
         probs = torch.nn.functional.softmax(out, dim=1).cpu().numpy().tolist()[0]
     print(f"Predicted: {class_names[pred]} | Probabilities: {probs}")
     if args.llm:
-        explanation = explain_prediction(args.image, class_names[pred], probs)
-        print('\nLLM explanation:\n', explanation)
+        reasoning_input = {
+            "image_path": args.image,
+            "predicted_label": class_names[pred],
+            "probabilities": {class_names[i]: float(probs[i]) for i in range(len(class_names))},
+            "top1_prob": float(max(probs)),
+            "top2_prob": float(sorted(probs, reverse=True)[1]),
+            "confidence_gap": float(max(probs) - sorted(probs, reverse=True)[1]),
+            "notes": "SimpleCNN chest X-ray classifier (educational, not medical)."
+    }
+        if reasoning_input["confidence_gap"] > 0.3:
+            reasoning_input["confidence_level"] = "high"
+        else:
+            reasoning_input["confidence_level"] = "low"
+
+
+    explanation = explain_prediction(reasoning_input)
+    print("\nLLM reasoning report:\n", explanation)
