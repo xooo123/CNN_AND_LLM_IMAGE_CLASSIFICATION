@@ -138,7 +138,13 @@ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --e
 ```
 **best parameters result**
 ```
+<<<<<<< HEAD
  python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 42
+=======
+ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 42  
+
+```
+>>>>>>> d100cfd1ff58b0a5744c211b3c8110b018033c51
 ```
     This script will: Load dataset , Train the CNN and Save best weights to:
     ```
@@ -161,7 +167,11 @@ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --e
 ### 5 setting up the enviroment for LLM explanations
 **5.1 get API key from openai website**
 ```
+<<<<<<< HEAD
 https://platform.openai.com/
+=======
+   python llm_client.py --image Covid19-dataset/test/Covid/096.png --prediction Covid
+>>>>>>> d100cfd1ff58b0a5744c211b3c8110b018033c51
 ```
 **5.1.1 create an API key by going to Quickstart section and select ### create API key**
 
