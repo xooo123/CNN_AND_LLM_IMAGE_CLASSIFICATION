@@ -177,7 +177,7 @@ ollama serve
 
 ### 6 LLM Explanations
 ```
-  python llm_client.py --image Covid19-dataset/test/Covid/096.png --prediction Covid
+ python llm_client.py  --image Covid19-dataset/test/Covid/096.png --predicted_label Covid  --probs 0.9276,0.0323,0.0400 --class_names Covid,Normal,Viral-Pneumonia
 ```
 ### 7 FastAPI Server:
 ```
@@ -187,7 +187,8 @@ ollama serve
 ```
  http://localhost:8000
 ```
-
+###Note
+**Keep in mind that openai might not work due to key issues and ollama is the local LLM in this project**
 
 ### License
 MIT License — free for research, academic, and commercial use.
