@@ -130,15 +130,15 @@ source venv/bin/activate
 ### Training:
  **Hyperparameters Used in the Report**
  ```# Runs used in the report:
-python src/train.py --data_root ./Covid19-dataset --lr 2e-4 --batch_size 32 --epochs 30 --seed 42
-python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 42
-python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 77
-python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 30  --seed 77
-python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 50  --seed 42
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4 --batch_size 16 --epochs 30 --seed 42
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 35  --seed 42
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 35  --seed 77
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 77
+python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 50  --seed 42
 ```
 **best parameters result**
 ```
- python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 32 --epochs 35  --seed 42  
+ python src/train.py --data_root ./Covid19-dataset --lr 2e-4  --batch_size 16 --epochs 30  --seed 42  
 
 ```
     This script will: Load dataset , Train the CNN and Save best weights to:
