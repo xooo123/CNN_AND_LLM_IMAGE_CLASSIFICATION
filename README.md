@@ -170,7 +170,7 @@ https://platform.openai.com/
   ```
    api_key = ("OPENAI_API_KEY") #add your openai key here
   ```
-**5.1.3start ollama**
+**5.1.3 start ollama**
 ```
 ollama serve
 ```
@@ -188,6 +188,7 @@ ollama serve
  http://localhost:8000
 ```
 ###Note
+
 **Keep in mind that openai might not work due to key issues and ollama is the local LLM in this project**
 
 ### License
