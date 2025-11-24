@@ -71,7 +71,7 @@ def explain_prediction(reasoning_input):
     # ============================================================
     try:
         from openai import OpenAI
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY")) #add your key in environment variable
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",

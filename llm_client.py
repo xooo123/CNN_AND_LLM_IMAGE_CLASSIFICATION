@@ -75,7 +75,7 @@ def get_openai_reasoning(reasoning_input):
     """Send reasoning JSON to OpenAI GPT for reasoning."""
     from openai import OpenAI
 
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY") #add your key in environment variable
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY environment variable not set.")
 
