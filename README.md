@@ -160,7 +160,7 @@ https://platform.openai.com/
 ```
 **4.1.1 create an API key by going to Quickstart section and select ### create API key**
 
-  **4.1.2 go to llm_client.py and llm_wrapper.py , find this section of the code and add your openai key save and run**
+  **4.1.2 go to llm_client.py and src/llm_wrapper.py , find this section of the code and add your openai key save and run**
   ```
    api_key = ("OPENAI_API_KEY") #add your openai key here
   ```
