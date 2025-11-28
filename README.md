@@ -176,9 +176,9 @@ ollama serve
 ```
  http://localhost:8000
 ```
-###Note
+## Note
 
-## ✅ Unit Tests
+##  Unit Tests
 
 This project includes automated unit tests using **pytest** to verify:
 
