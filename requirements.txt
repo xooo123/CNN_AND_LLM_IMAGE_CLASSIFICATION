@@ -14,3 +14,4 @@ fastapi
 ollama
 uvicorn
 python-multipart
+pytest
